@@ -7,7 +7,9 @@ import {
     ScrollView,
     Platform,
     Dimensions,
-    TouchableOpacity
+    TouchableOpacity,
+    Modal,
+    TextInput
 } from 'react-native';
 import * as Progress from 'react-native-progress';
 import moment from 'moment';
@@ -23,8 +25,24 @@ class DayOfWeek extends Component {
         super(props);
         this.state = {
             listOfTasks: false,
+            modalVisible: false,
+            title: '',
+            description: '',
             daysInAsyncStorage: props.daysInAsyncStorage ? props.daysInAsyncStorage : null
         };
+    }
+
+    toggleModal = () => {
+        this.setState({modalVisible: !this.state.modalVisible})
+    }
+
+    toggleModalCreate = () => {
+        this.setState({modalVisible: !this.state.modalVisible})
+        this.props.createTask(
+            this.props.day,
+            this.state.title,
+            this.state.description
+        );
     }
 
     getTaskProgress() {
@@ -79,7 +97,7 @@ class DayOfWeek extends Component {
                         ]}>
                         <TouchableOpacity
                             style={{backgroundColor:'red',height:40,width:40}} 
-                            onPress={() => this.props.createTask(this.props.day)} />
+                            onPress={() => this.toggleModal()} />
                             
                         <TouchableOpacity/>
                     </View>
@@ -89,12 +107,58 @@ class DayOfWeek extends Component {
                     ?
                     <ListOfTasks
                         daysInAsyncStorage={this.props.daysInAsyncStorage ? this.props.daysInAsyncStorage : []}
-                        onCheckChange={this.props.onCheckChange}
                         deleteTask={this.props.deleteTask}
+                        editTask={this.props.editTask}
                     />
                     :
                     null
                 }
+
+                <View style={styles.modalWrap}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        onRequestClose={() => {}}
+                        visible={this.state.modalVisible}>
+                        <View style={styles.modal}>
+                            <Text style={styles.headerModalText}>Create your task</Text>
+                            <ScrollView style={styles.modalBody} keyboardShouldPersistTaps="handled">
+                                <TextInput 
+                                    name="title"
+                                    style={{height: 40}}
+                                    placeholder="Title"
+                                    placeholderTextColor='#C7C7CD'
+                                    onChangeText={(title) => this.setState({title})}
+                                    returnKeyType={"next"}
+                                    autoFocus = {true}
+                                    onSubmitEditing={(event) => { 
+                                        this.refs.descriptionRef.focus(); 
+                                    }}
+                                />
+                                <TextInput 
+                                    name="description"
+                                    style={{height: 150}}
+                                    placeholder="Description"
+                                    ref="descriptionRef"
+                                    multiline = {true}
+                                    numberOfLines = {4}
+                                    placeholderTextColor='#C7C7CD'
+                                    onChangeText={(description) => this.setState({description})}
+                                />
+                            </ScrollView>
+                            <View style={styles.buttons}>
+                                <TouchableOpacity
+                                    onPress={this.toggleModal}>
+                                    <Text style={styles.button}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={this.toggleModalCreate}>
+                                    <Text style={styles.button}>Create Task</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
             </View>
         );
     }
@@ -134,14 +198,59 @@ const styles = StyleSheet.create({
     },
     progressText: {
         textAlign: 'center',
+        paddingBottom: 4,
+        fontSize: 13
+    },
+    progressProcentText: {
+        textAlign: 'center',
     },
     addCol: {
         flex: 1,
         justifyContent: 'center',
         backgroundColor: 'steelblue',
         borderTopRightRadius: 6,
-        
-    }
+        alignItems: 'center',
+    },
+    modalWrap: {
+        overflow: 'visible'
+    },
+    headerModalText: {
+        fontFamily: 'OpenSans-SemiBold',
+        fontSize: 18,
+        textAlign: 'center',
+        color: 'black',
+        padding: 9
+    },
+    modalBody: {
+        padding: 9
+    },
+    modal: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 0},
+        shadowOpacity: 1,
+        shadowRadius: 20,
+        elevation: 20,
+        flex: 1,
+        marginHorizontal: 50,
+        marginTop: 50,
+        maxHeight: 300
+    },
+    buttons: {
+        borderTopWidth: 1,
+        borderTopColor: 'gray',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        padding: 9,
+    },
+    button: {
+        color: 'blue',
+        fontFamily: 'OpenSans-SemiBold',
+        fontSize: 18,
+        marginLeft: 25,
+        marginRight: 25
+    },
 });
 
 export default DayOfWeek;

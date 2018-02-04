@@ -44,14 +44,18 @@ class Week extends Component {
         }
     }
 
-    createTask = (uniqueDate) => {
+    createTask = (uniqueDate, title, description) => {
         console.log('create uniqueDate', uniqueDate);
+        console.log('create title', title);
+        console.log('create description', description);
     }
 
-    onCheckChange = (uniqueDate, taskId, checked) => {
-        console.log('checked uniqueDate:',uniqueDate)
-        console.log('checked taskId:',taskId)
-        console.log('checked status:',checked)
+    editTask = (date, taskId, newTitle, newDescription, checked) => {
+        console.log('editTask date:',date)
+        console.log('editTask taskId:',taskId)
+        console.log('editTask newTitle:',newTitle)
+        console.log('editTask newDescription:',newDescription)
+        console.log('editTask checked:',checked)
     }
 
     deleteTask = (uniqueDate, taskId) => {
@@ -84,7 +88,7 @@ class Week extends Component {
 
     render() {
         return (
-            <ScrollView style={styles.container}>
+            <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
                 <DatePick changeDate={this.changeDate}/>
                 {
                     this.state.arrayOfSevenDays.map((day, i) => {
@@ -98,9 +102,9 @@ class Week extends Component {
                                 null
                             }
                             key={i}
-                            onCheckChange={this.onCheckChange}
                             deleteTask={this.deleteTask}
                             createTask={this.createTask}
+                            editTask={this.editTask}
                         />
                     })
                 }

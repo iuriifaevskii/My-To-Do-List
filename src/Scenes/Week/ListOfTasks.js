@@ -37,8 +37,8 @@ class ListOfTasks extends Component {
                             key={i}
                             date={this.state.daysInAsyncStorage.date}
                             task={task}
-                            onCheckChange={this.props.onCheckChange}
                             deleteTask={this.props.deleteTask}
+                            editTask={this.props.editTask}
                     />)
                     :
                     <Text>No tasks yet</Text>
