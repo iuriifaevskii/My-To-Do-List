@@ -60,14 +60,14 @@ class Week extends Component {
         this.setState({arrayOfSevenDays: this.generateArrayOfSevenDays()})
     }
 
-    createTask = (uniqueDate, title, description) => {
+    createTask = (uniqueDate, title, description, time) => {
         const daysInAsyncStorage = this.state.daysInAsyncStorage;
-        
         const task = {
             id: uuidv1(),
             title,
             description,
             isCompleted: false,
+            time
         };
         if (this.taskOnDate(uniqueDate)) {
             const oldDay = this.taskOnDate(uniqueDate);
@@ -84,13 +84,14 @@ class Week extends Component {
         }
     }
 
-    editTask = (date, taskId, newTitle, newDescription, checked) => {
+    editTask = (date, taskId, newTitle, newDescription, checked, newTime) => {
         const daysInAsyncStorage = this.state.daysInAsyncStorage.filter(item => item.date !== date);
         const task = {
             id: taskId,
             title: newTitle,
             description: newDescription,
             isCompleted: checked,
+            time: newTime
         };
         const oldDay = this.taskOnDate(date);
         const tasks = oldDay.tasks.filter(task => task.id !== taskId);

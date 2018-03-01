@@ -5,7 +5,6 @@ const setPassword = async (newPass) => {
     try {
         await AsyncStorage.setItem('@MySuperPass:key', JSON.stringify(newPass));
     } catch (error) {
-        console.log(error)
         throw new Error();
     }
 }
@@ -14,8 +13,6 @@ const getPassword = async () => {
     try {
         const password = await AsyncStorage.getItem('@MySuperPass:key');
         if (password !== null){
-            //await AsyncStorage.clear();
-            
             return JSON.parse(password);
         } else {
             return null;

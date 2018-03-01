@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     Modal,
     Image,
+    Switch,
     TextInput
 } from 'react-native';
 import * as Progress from 'react-native-progress';
@@ -22,6 +23,7 @@ import {
 } from '../../constants';
 
 import ListOfTasks from './ListOfTasks';
+import TimePick from './TimePick';
 
 class DayOfWeek extends Component {
     constructor(props) {
@@ -31,7 +33,9 @@ class DayOfWeek extends Component {
             modalVisible: false,
             title: '',
             description: '',
-            daysInAsyncStorage: props.daysInAsyncStorage ? props.daysInAsyncStorage : null
+            daysInAsyncStorage: props.daysInAsyncStorage ? props.daysInAsyncStorage : null,
+            time: null,
+            toggledTime: false
         };
     }
 
@@ -44,7 +48,8 @@ class DayOfWeek extends Component {
         this.props.createTask(
             this.props.day,
             this.state.title,
-            this.state.description
+            this.state.description,
+            this.state.time
         );
     }
 
@@ -82,6 +87,19 @@ class DayOfWeek extends Component {
 
     isDayNow() {
         return moment(this.props.day).format('YYYY-MM-DD') < moment().format('YYYY-MM-DD');
+    }
+
+    changeTime = (time) => {
+        this.setState({time});
+    }
+
+    onTogledTimeChange = () => {
+        if (this.state.toggledTime) {
+            this.setState({time: null});
+        } else {
+            this.setState({time: this.state.time ? this.state.time : moment().format('HH:mm')});
+        }
+        this.setState({toggledTime: !this.state.toggledTime});
     }
 
     render() {
@@ -171,20 +189,41 @@ class DayOfWeek extends Component {
                                     onChangeText={(title) => this.setState({title})}
                                     returnKeyType={"next"}
                                     autoFocus = {true}
+                                    maxLength={50}
                                     onSubmitEditing={(event) => { 
                                         this.refs.descriptionRef.focus(); 
                                     }}
                                 />
-                                <TextInput 
+                                <TextInput
                                     name="description"
-                                    style={{height: 150}}
+                                    style={{height: this.state.toggledTime ? 100 : 150}}
                                     placeholder={strings('week_screen.description')}
                                     ref="descriptionRef"
                                     multiline = {true}
                                     numberOfLines = {4}
+                                    maxLength={200}
                                     placeholderTextColor='#C7C7CD'
                                     onChangeText={(description) => this.setState({description})}
                                 />
+                                <View style={styles.timeBlock}>
+                                    <Text>{strings('week_screen.select_time')}</Text>
+                                    <Switch
+                                        onTintColor={'blue'}
+                                        onValueChange={this.onTogledTimeChange}
+                                        value={this.state.toggledTime}
+                                    />
+                                </View>
+                                {this.state.toggledTime
+                                ?
+                                <View style={styles.timeBlock}>
+                                    <TimePick
+                                        initTime={null}
+                                        changeTime={this.changeTime}
+                                    />
+                                </View>
+                                :
+                                <View/>
+                                }
                             </ScrollView>
                             <View style={styles.buttons}>
                                 <TouchableOpacity
@@ -275,7 +314,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
         color: 'black',
-        padding: 9
+        paddingTop: 7
     },
     modalBody: {
         padding: 9
@@ -292,6 +331,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 50,
         marginTop: 50,
         maxHeight: 300
+    },
+    timeBlock: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
     },
     buttons: {
         borderTopWidth: 1,

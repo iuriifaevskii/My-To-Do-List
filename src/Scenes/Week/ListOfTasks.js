@@ -11,6 +11,7 @@ import {
     CheckBox 
 } from 'react-native';
 import _ from 'lodash';
+import moment from 'moment';
 
 import {
     colors as colorConst,
@@ -33,19 +34,23 @@ class ListOfTasks extends Component {
     }
 
     sortTasks(taskArray) {
-        console.log('taskArray',taskArray)
         const array = !_.isEmpty(taskArray) ? taskArray.sort((a, b) => {
-            if(a.title < b.title) return -1;
-            if(a.title > b.title) return 1;
+            
+            if(moment(a.time, 'HH:mm').format() < moment(b.time, 'HH:mm').format()) return -1;
+            if(moment(a.time, 'HH:mm').format() > moment(b.time, 'HH:mm').format()) return 1;
+            
+            if(!a.time || !b.time) {
+                if(a.title < b.title) return -1;
+                if(a.title > b.title) return 1;
+            }
+
+            if(!a.title || !b.title) {
+                if(a.id < b.id) return -1;
+                if(a.id > b.id) return 1;
+            }
+
             return 0;
 
-
-            //let keyA = new Date(a.updated_at);
-            //let keyB = new Date(b.updated_at);
-            //// Compare the 2 dates
-            //if(keyA < keyB) return -1;
-            //if(keyA > keyB) return 1;
-            //return 0;
         }) : [];
         return array
     }
@@ -62,7 +67,7 @@ class ListOfTasks extends Component {
                 {
                     !_.isEmpty(this.props.daysInAsyncStorage) && this.state.daysInAsyncStorage.tasks
                     ?
-                    this.state.daysInAsyncStorage.tasks
+                    this.sortTasks(this.state.daysInAsyncStorage.tasks)
                         .map((task, i) => <TaskRow 
                             key={task.id}
                             date={this.state.daysInAsyncStorage.date}

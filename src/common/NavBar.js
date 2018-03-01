@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     customNavBarRight: {
         flex: 20,
         paddingTop: (Platform.OS === 'ios') ? 34 : 20,
-        // paddingLeft: 20,
         flexDirection: 'row',
         justifyContent: 'center'
     },

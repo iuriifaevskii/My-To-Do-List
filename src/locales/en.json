@@ -36,9 +36,10 @@
         "save": "Save",
         "tasks_are_completed": "Tasks are completed",
         "task_is_not_completed": "task is not completed",
-        "create_your_task": "Create your task",
-        "create_task": "Create Task",
+        "create_your_task": "Create task",
+        "create_task": "Create",
         "select_date": "select date",
+        "select_time": "select time",
         "select_date2": "Select date",
         "confirm": "Confirm",
         "edit_your_task": "Edit your task"

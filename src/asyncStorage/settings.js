@@ -13,8 +13,6 @@ const getWeekStart = async () => {
     try {
         const weekStart = await AsyncStorage.getItem('@MySuperWeekStart:key');
         if (weekStart !== null){
-            //await AsyncStorage.clear();
-            
             return JSON.parse(weekStart);
         } else {
             return null;

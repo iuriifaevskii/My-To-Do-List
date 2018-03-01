@@ -7,8 +7,6 @@ const getDays = async () => {
     try {
         const days = await AsyncStorage.getItem('@MySuperStore:key');
         if (days !== null){
-            //await AsyncStorage.clear();
-            
             return JSON.parse(days);
         } else {
             return [];

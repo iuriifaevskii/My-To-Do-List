@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     Modal,
     TextInput,
-    AsyncStorage
+    AsyncStorage,
+    Keyboard
 } from 'react-native';
 import {Actions, ActionConst} from 'react-native-router-flux';
 import moment from 'moment';
@@ -49,7 +50,6 @@ class EnterPassword extends Component {
     }
 
     async componentDidMount() {
-        //AsyncStorage.clear();
         const passwordObject = await getPassword();
         const secret = await getSecret();
         if (passwordObject) {
@@ -144,6 +144,7 @@ class EnterPassword extends Component {
     goToContent = async (password) => {
         const passwordObject = await getPassword();
         if (passwordObject && password === passwordObject.password) {
+            Keyboard.dismiss();
             Actions[routeConst.WEEK]();
         }
     }

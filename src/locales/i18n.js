@@ -2,7 +2,6 @@ import ReactNative from 'react-native';
 import I18n from 'react-native-i18n';
 import moment from 'moment';
 
-// Import all locales
 import en from './en.json';
 import uk from './uk.json';
 import ru from './ru.json';
@@ -21,7 +20,6 @@ export const isRTL = currentLocale.indexOf('uk') === 0 || currentLocale.indexOf(
 
 ReactNative.I18nManager.allowRTL(isRTL);
 
-// Localizing momentjs to Hebrew or English
 if (currentLocale.indexOf('uk') === 0) {
     require('moment/locale/uk.js');
     moment.locale('uk');

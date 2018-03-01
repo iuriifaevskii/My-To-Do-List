@@ -25,7 +25,7 @@
     "week_screen": {
         "week": "Неделя",
         "no_tasks": "Нет заданий",
-        "tasks_are_not_completed": "Задание не завершено",
+        "tasks_are_not_completed": "заданий не завершено",
         "no_tasks_yet": "Задач ещё нет",
         "do_you_want_to_delete_task": "Вы уверены, что хотите удалить задание",
         "cancel": "ОТМЕНА",
@@ -36,9 +36,10 @@
         "save": "Сохранить",
         "tasks_are_completed": "Задачи завершены",
         "task_is_not_completed": "задача не завершена",
-        "create_your_task": "Создайте свою задачу",
-        "create_task": "Создать задачу",
+        "create_your_task": "Создайте задачу",
+        "create_task": "Создать",
         "select_date": "выберите дату",
+        "select_time": "выберите врем'я",
         "select_date2": "Выберите дату",
         "confirm": "Подтвердить",
         "edit_your_task": "Редактируйте свою задачу"
