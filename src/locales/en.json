@@ -1,0 +1,46 @@
+{
+    "password_screen": {
+        "enter_password": "Enter Password",
+        "forgot_password": "Forgot Password",
+        "secret_phrase": "Secret Phrase",
+        "secret_tip": "Secret Tip",
+        "dose_not_match": "dose not match",
+        "valid_secret": "valid secret",
+        "exit": "Exit",
+        "save": "Save",
+        "create_password": "Create Password",
+        "password": "Password",
+        "confirm_password": "Confirm Password",
+        "create": "Create",
+        "success_password": "success password",
+        "create_password_secret_phrase": "Create password/secret phrase",
+        "minimum_3_symbols": "minimum 3 symbols"
+    },
+    "settings_screen": {
+        "settings": "Settings",
+        "change_language": "Change language",
+        "week_from_monday": "Week from Monday",
+        "rate_the_application": "Rate The Application"
+    },
+    "week_screen": {
+        "week": "Week",
+        "no_tasks": "No tasks",
+        "tasks_are_not_completed": "tasks are not completed",
+        "no_tasks_yet": "No tasks yet",
+        "do_you_want_to_delete_task": "Do you want to delete a task",
+        "cancel": "CANCEL",
+        "delete": "DELETE",
+        "title": "Title",
+        "description": "Description",
+        "cancel2": "Cancel",
+        "save": "Save",
+        "tasks_are_completed": "Tasks are completed",
+        "task_is_not_completed": "task is not completed",
+        "create_your_task": "Create your task",
+        "create_task": "Create Task",
+        "select_date": "select date",
+        "select_date2": "Select date",
+        "confirm": "Confirm",
+        "edit_your_task": "Edit your task"
+    }
+}

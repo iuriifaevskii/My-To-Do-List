@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import DatePicker from 'react-native-datepicker'
 
+import moment from 'moment';
+import {strings} from '../../locales/i18n';
+
 class DatePick extends Component {
     constructor(props){
         super(props)
-        this.state = {date:"2016-05-15"}
+        this.state = {date: moment()}
     }
 
     render() {
@@ -13,21 +16,18 @@ class DatePick extends Component {
                 style={{width: 200}}
                 date={this.state.date}
                 mode="date"
-                placeholder="select date"
-                format="YYYY-MM-DD"
-                minDate="2016-05-01"
-                maxDate="2016-06-01"
+                placeholder={strings('week_screen.select_date')}
+                format="DD/MM/YYYY"
+                minDate="01/01/2009"
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
                 customStyles={{
                     dateIcon: {
                         position: 'absolute',
                         left: 0,
-                        top: 4,
                         marginLeft: 0
                     },
                     dateInput: {
-                        marginLeft: 36
                     }
                 }}
                 onDateChange={(date) => {

@@ -1,0 +1,46 @@
+{
+    "password_screen": {
+        "enter_password": "Введіть пароль",
+        "forgot_password": "Забув пароль",
+        "secret_phrase": "Секретне слово",
+        "secret_tip": "підказка",
+        "dose_not_match": "не збігається!",
+        "valid_secret": "успіх! вірне секретне слово",
+        "exit": "Вихід",
+        "save": "Зберегти",
+        "create_password": "Створити пароль",
+        "password": "Пароль",
+        "confirm_password": "Повторити пароль",
+        "create": "Створити",
+        "success_password": "успіх! вірний пароль",
+        "create_password_secret_phrase": "Створити пароль/секретне слово",
+        "minimum_3_symbols": "мінімум 3 символа"
+    },
+    "settings_screen": {
+        "settings": "Налаштування",
+        "change_language": "Змінити мову",
+        "week_from_monday": "Тиждень з понеділка",
+        "rate_the_application": "Оцінити додаток"
+    },
+    "week_screen": {
+        "week": "Тиждень",
+        "no_tasks": "Немає завдань",
+        "tasks_are_not_completed": "Завдання не завершене",
+        "no_tasks_yet": "Завдань ще немає",
+        "do_you_want_to_delete_task": "Ви впевнені, що хочете видалити завдання",
+        "cancel": "СКАСУВАТИ",
+        "delete": "ВИДАЛИТИ",
+        "title": "Назва",
+        "description": "Опис",
+        "cancel2": "Скасувати",
+        "save": "Зберегти",
+        "tasks_are_completed": "Завдання виконані",
+        "task_is_not_completed": "завдання не завершено",
+        "create_your_task": "Створіть своє завдання",
+        "create_task": "Створити завдання",
+        "select_date": "виберіть дату",
+        "select_date2": "Виберіть дату",
+        "confirm": "Підтвердьте",
+        "edit_your_task": "Відредагуйте своє завдання"
+    }
+}

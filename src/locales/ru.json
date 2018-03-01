@@ -1,0 +1,46 @@
+{
+    "password_screen": {
+        "enter_password": "Введите пароль",
+        "forgot_password": "Забыл пароль",
+        "secret_phrase": "Секретное слово",
+        "secret_tip": "подсказка",
+        "dose_not_match": "не совпадает!",
+        "valid_secret": "валидное секретное слово",
+        "exit": "Выход",
+        "save": "Сохранить",
+        "create_password": "Создать пароль",
+        "password": "Пароль",
+        "confirm_password": "Повторить пароль",
+        "create": "Создать",
+        "success_password": "верный пароль",
+        "create_password_secret_phrase": "Создать пароль / секретное слово",
+        "minimum_3_symbols": "минимум 3 символа"
+    },
+    "settings_screen": {
+        "settings": "Настройка",
+        "change_language": "Сменить язык",
+        "week_from_monday": "Неделя с понедельника",
+        "rate_the_application": "Оценить приложение"
+    },
+    "week_screen": {
+        "week": "Неделя",
+        "no_tasks": "Нет заданий",
+        "tasks_are_not_completed": "Задание не завершено",
+        "no_tasks_yet": "Задач ещё нет",
+        "do_you_want_to_delete_task": "Вы уверены, что хотите удалить задание",
+        "cancel": "ОТМЕНА",
+        "delete": "УДАЛИТЬ",
+        "title": "Заглавие",
+        "description": "Описание",
+        "cancel2": "Отмена",
+        "save": "Сохранить",
+        "tasks_are_completed": "Задачи завершены",
+        "task_is_not_completed": "задача не завершена",
+        "create_your_task": "Создайте свою задачу",
+        "create_task": "Создать задачу",
+        "select_date": "выберите дату",
+        "select_date2": "Выберите дату",
+        "confirm": "Подтвердить",
+        "edit_your_task": "Редактируйте свою задачу"
+    }
+}

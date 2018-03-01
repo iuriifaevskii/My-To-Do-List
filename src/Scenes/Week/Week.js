@@ -7,10 +7,12 @@ import {
     ScrollView,
     Platform,
     Dimensions,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native';
 import moment from 'moment';
 import _ from 'lodash';
+import uuidv1 from 'uuid/v1'
+import {strings} from '../../locales/i18n';
 
 import {
     colors as colorConst,
@@ -18,9 +20,14 @@ import {
 
 import {
     getDays,
-    getDayByDate
+    setDays,
 } from '../../asyncStorage/data';
 
+import {
+    getWeekStart,
+} from '../../asyncStorage/settings';
+
+import days from '../../jsons/days';
 
 import DayOfWeek from './DayOfWeek';
 import DatePick from './DatePick';
@@ -32,75 +39,132 @@ class Week extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            arrayOfSevenDays: this.generateArrayOfSevenDays(new Date().toISOString().split('T')[0]),
-            daysInAsyncStorage: []
+            arrayOfSevenDays: [],
+            daysInAsyncStorage: [],
+            weekSettings: null
         };
     }
 
-    componentDidMount() {
-        const daysInAsyncStorage = getDays();
+    async componentDidMount() {
+        const weekSettings = !_.isEmpty(await getWeekStart()) ? await getWeekStart() : null;
+        if(weekSettings) {
+            this.setState({weekSettings: weekSettings ? weekSettings.toggled : false})
+        } else {
+            this.setState({weekSettings: this.state.weekSettings})
+        }
+        const daysInAsyncStorage = !_.isEmpty(await getDays()) ? await getDays() : [];
         if (daysInAsyncStorage) {
+            setDays(daysInAsyncStorage);
+            this.setState({ daysInAsyncStorage });
+        }
+        this.setState({arrayOfSevenDays: this.generateArrayOfSevenDays()})
+    }
+
+    createTask = (uniqueDate, title, description) => {
+        const daysInAsyncStorage = this.state.daysInAsyncStorage;
+        
+        const task = {
+            id: uuidv1(),
+            title,
+            description,
+            isCompleted: false,
+        };
+        if (this.taskOnDate(uniqueDate)) {
+            const oldDay = this.taskOnDate(uniqueDate);
+            oldDay.tasks.push(task);
+        } else {
+            daysInAsyncStorage.push({
+                date: uniqueDate,
+                tasks: [task]
+            });
+        }
+        if (daysInAsyncStorage) {
+            setDays(daysInAsyncStorage);
             this.setState({ daysInAsyncStorage });
         }
     }
 
-    createTask = (uniqueDate, title, description) => {
-        console.log('create uniqueDate', uniqueDate);
-        console.log('create title', title);
-        console.log('create description', description);
-    }
-
     editTask = (date, taskId, newTitle, newDescription, checked) => {
-        console.log('editTask date:',date)
-        console.log('editTask taskId:',taskId)
-        console.log('editTask newTitle:',newTitle)
-        console.log('editTask newDescription:',newDescription)
-        console.log('editTask checked:',checked)
+        const daysInAsyncStorage = this.state.daysInAsyncStorage.filter(item => item.date !== date);
+        const task = {
+            id: taskId,
+            title: newTitle,
+            description: newDescription,
+            isCompleted: checked,
+        };
+        const oldDay = this.taskOnDate(date);
+        const tasks = oldDay.tasks.filter(task => task.id !== taskId);
+        tasks.push(task);
+        daysInAsyncStorage.push({
+            date,
+            tasks
+        });
+        if (daysInAsyncStorage) {
+            setDays(daysInAsyncStorage);
+            this.setState({ daysInAsyncStorage });
+        }
     }
 
     deleteTask = (uniqueDate, taskId) => {
-        console.log('delete uniqueDate:', uniqueDate);
-        console.log('delete taskId:', taskId);
+        const daysInAsyncStorage = this.state.daysInAsyncStorage.filter(item => item.date !== uniqueDate);
+        const oldDay = this.taskOnDate(uniqueDate);
+        const tasks = oldDay.tasks.filter(task => task.id !== taskId);
+        daysInAsyncStorage.push({
+            date: uniqueDate,
+            tasks
+        });
+        if (daysInAsyncStorage) {
+            setDays(daysInAsyncStorage);
+            this.setState({ daysInAsyncStorage });
+        }
     }
     
     changeDate = (date) => {
         this.setState({arrayOfSevenDays: this.generateArrayOfSevenDays(date)});
     }
 
+    momentOverrideMethod() {
+        moment.fn.weekdayWithStartWeekday = function (targetWeekday, startDayOfWeek) {
+            let weekday = (this.day() + 7 - startDayOfWeek) % 7;
+            return this.add(targetWeekday - weekday, 'd');
+        }
+    }
     generateArrayOfSevenDays(firstValue) {
-        var monday = moment(firstValue ? `${firstValue}T00:00:00` : new Date())
-            .startOf('isoWeek')//moment().startOf('week');
-            .format("YYYY-MM-DDTHH:mm:ss");
-
+        this.momentOverrideMethod();
+        
+        const startDay = firstValue ? moment(firstValue, 'DD/MM/YYYY') : moment();
+        let monday = startDay.weekdayWithStartWeekday(0, this.state.weekSettings ? 0 : 6)
 		let newFirstValue = moment(monday);
 		const arrayOfSevenDays = [];
 		
 		for (let i = 0; i < 7; ++i) {
-			if (i > 0) {
-				newFirstValue.add(1, 'days')
-			}
-			let future = newFirstValue.clone();
-			arrayOfSevenDays.push(future._d);
+			arrayOfSevenDays.push(newFirstValue.add(1, 'days').format('YYYY-MM-DD'));
         }
-        
 		return arrayOfSevenDays;
-	}
+    }
+    
+    taskOnDate(day) {
+        const isDate = this.state.daysInAsyncStorage
+            .filter(item => moment(item.date).format('YYYY-MM-DD') === moment(day).format('YYYY-MM-DD'))[0];
+        return isDate;
+    }
 
     render() {
         return (
             <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
-                <DatePick changeDate={this.changeDate}/>
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: 6}}>
+                    <View style={{paddingRight: 3}}>
+                        <Text style={{fontSize:17, color: 'black'}}>{strings('week_screen.select_date2')}:</Text>
+                    </View>
+                    <View style={{paddingLeft: 3}}>
+                        <DatePick changeDate={this.changeDate}/>
+                    </View>
+                </View>
                 {
                     this.state.arrayOfSevenDays.map((day, i) => {
                         return <DayOfWeek
                             day={day}
-                            daysInAsyncStorage={
-                                _.some(this.state.daysInAsyncStorage, {date: moment(day).format("YYYY-MM-DDTHH:mm:ss")})
-                                ?
-                                getDayByDate(moment(day).format("YYYY-MM-DDTHH:mm:ss"))
-                                :
-                                null
-                            }
+                            daysInAsyncStorage={this.taskOnDate(day)}
                             key={i}
                             deleteTask={this.deleteTask}
                             createTask={this.createTask}

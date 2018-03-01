@@ -12,39 +12,62 @@ import {
   View
 } from 'react-native';
 
-import Week from './src/Scenes';
+import {
+  Scene,
+  Actions,
+  ActionConst,
+  Modal,
+  Tabs,
+  Stack,
+  Router
+} from 'react-native-router-flux';
 
-class App extends Component {
-    render() {
-      return (
-          <View style={styles.container}>
-              <View>
-                  <Week />
-              </View>
-          </View>
-      );
-    }
-}
+import {
+    routes as routeConst
+} from './src/constants';
+import {strings} from './src/locales/i18n';
+import {
+    NavBar
+} from './src/common';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  headerBackground: {
-    height: 50,
-    backgroundColor: 'blue'
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-  },
-});
+import {
+  Week,
+  EnterPassword,
+  Settings
+} from './src/Scenes';
+
+const App = () => (
+    <Router>
+        <Stack key="root">
+            {<Scene
+                navBar={NavBar}
+                key={routeConst.ENTER_PASSWORD}
+                component={EnterPassword}
+                hideNavBar={false}
+                leftIcon={false}
+                rightIcon={false}
+                onLeft={() => Actions.pop()}
+                title={null}/>}
+            <Scene 
+                navBar={NavBar}
+                key={routeConst.WEEK}
+                component={Week}
+                leftIcon={false}
+                rightIcon={true}
+                hideNavBar={false}
+                onLeft={() => Actions.pop()}
+                title={strings('week_screen.week')} />
+            <Scene 
+                navBar={NavBar}
+                key={routeConst.SETTINGS}
+                component={Settings} 
+                leftIcon={true}
+                rightIcon={false}
+                hideNavBar={false}
+                onLeft={() => Actions.reset(routeConst.WEEK)}
+                title={strings('settings_screen.settings')}/>
+        </Stack>
+    </Router>
+);
 
 export default App;

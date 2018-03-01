@@ -1,3 +1,9 @@
 import Week from './Week';
+import EnterPassword from './EnterPassword';
+import Settings from './Settings';
 
-export default Week
+export {
+    Week,
+    EnterPassword,
+    Settings
+}

@@ -9,10 +9,13 @@ import {
     Dimensions,
     TouchableOpacity,
     Modal,
+    Image,
     TextInput
 } from 'react-native';
 import * as Progress from 'react-native-progress';
 import moment from 'moment';
+import _ from 'lodash';
+import {strings} from '../../locales/i18n';
 
 import {
     colors as colorConst,
@@ -45,25 +48,49 @@ class DayOfWeek extends Component {
         );
     }
 
+    statusText(countNoCompletedTask, allTasks) {
+        if (allTasks!==0 && countNoCompletedTask === 0) {
+            return strings('week_screen.tasks_are_completed')
+        } else if (countNoCompletedTask === 1 && allTasks !== countNoCompletedTask) {
+            return `${countNoCompletedTask} ${strings('week_screen.task_is_not_completed')}`;
+        } else if (allTasks === 0) {
+            return strings('week_screen.no_tasks');
+        } else {
+            return `${countNoCompletedTask} ${strings('week_screen.tasks_are_not_completed')}`
+        }
+    }
+
     getTaskProgress() {
         const countCompleted = this.props.daysInAsyncStorage
             ? this.props.daysInAsyncStorage.tasks.filter(task => task.isCompleted).length
             : 0;
-        const allTasks = this.props.daysInAsyncStorage
+        const allTasksForDiv = this.props.daysInAsyncStorage && !_.isEmpty(this.props.daysInAsyncStorage.tasks)
             ? this.props.daysInAsyncStorage.tasks.length
             : 1;
+        const allTasks = this.props.daysInAsyncStorage
+            ? this.props.daysInAsyncStorage.tasks.length
+            : 0;
+        const noCompletedTasks = allTasks - countCompleted;
 
         return {
-            procent: (countCompleted*100/allTasks).toFixed(),
-            progressProcent: (countCompleted/allTasks).toFixed(1)
+            procent: (countCompleted*100/allTasksForDiv).toFixed(),
+            progressProcent: (countCompleted/allTasksForDiv).toFixed(1),
+            noCompletedTasks,
+            allTasks
         }
+    }
+
+    isDayNow() {
+        return moment(this.props.day).format('YYYY-MM-DD') < moment().format('YYYY-MM-DD');
     }
 
     render() {
         return (
             <View>
-                <TouchableOpacity onPress={() => this.setState({listOfTasks: !this.state.listOfTasks})} style={styles.dayRow}>
-                    <View style={[styles.Col, styles.dayCol,
+                <TouchableOpacity
+                    onPress={() => this.setState({listOfTasks: !this.state.listOfTasks})}
+                    style={styles.dayRow}>
+                    <View style={[styles.Col, styles.dayCol, this.isDayNow() ? styles.backgroundNowCol: styles.backgroundCol,
                         this.state.listOfTasks
                         ?
                         {borderBottomLeftRadius: 0}
@@ -77,8 +104,13 @@ class DayOfWeek extends Component {
                             {moment(this.props.day).format('MMM YYYY')}
                         </Text>
                     </View>
-                    <View style={[styles.Col, styles.progressCol]}>
-                        <Text style={styles.progressText}>Progress Status</Text>
+                    <View style={[styles.Col, styles.progressCol, this.isDayNow() ? styles.progressNowColBackground: styles.progressColBackground]}>
+                        <Text style={styles.progressText}>
+                        {this.statusText(
+                            this.getTaskProgress().noCompletedTasks,
+                            this.getTaskProgress().allTasks
+                        )}
+                        </Text>
                         <Progress.Bar
                             progress={+this.getTaskProgress().progressProcent}
                             width={130}
@@ -88,18 +120,26 @@ class DayOfWeek extends Component {
                             {this.getTaskProgress().procent}%
                         </Text>
                     </View>
-                    <View style={[styles.Col, styles.addCol, 
+                    <View style={[styles.Col, styles.addCol, this.isDayNow() ? styles.addNowColBackground: styles.addColBackground,
                         this.state.listOfTasks
                         ?
                         {borderBottomRightRadius: 0}
                         :
                         {borderBottomRightRadius: 6}
                         ]}>
-                        <TouchableOpacity
-                            style={{backgroundColor:'red',height:40,width:40}} 
-                            onPress={() => this.toggleModal()} />
-                            
-                        <TouchableOpacity/>
+                        {this.isDayNow()
+                            ?
+                            <View style={{width: 40, height: 40}} />
+                            :
+                            <TouchableOpacity
+                                style={{height:40, width:40}} 
+                                onPress={() => this.toggleModal()}>
+                                <Image
+                                    style={{width: 40, height: 40}}
+                                    source={require('./img/add.png')}
+                                />
+                            </TouchableOpacity>
+                        }
                     </View>
                 </TouchableOpacity>
                 {
@@ -121,12 +161,12 @@ class DayOfWeek extends Component {
                         onRequestClose={() => {}}
                         visible={this.state.modalVisible}>
                         <View style={styles.modal}>
-                            <Text style={styles.headerModalText}>Create your task</Text>
+                            <Text style={styles.headerModalText}>{strings('week_screen.create_your_task')}</Text>
                             <ScrollView style={styles.modalBody} keyboardShouldPersistTaps="handled">
                                 <TextInput 
                                     name="title"
                                     style={{height: 40}}
-                                    placeholder="Title"
+                                    placeholder={strings('week_screen.title')}
                                     placeholderTextColor='#C7C7CD'
                                     onChangeText={(title) => this.setState({title})}
                                     returnKeyType={"next"}
@@ -138,7 +178,7 @@ class DayOfWeek extends Component {
                                 <TextInput 
                                     name="description"
                                     style={{height: 150}}
-                                    placeholder="Description"
+                                    placeholder={strings('week_screen.description')}
                                     ref="descriptionRef"
                                     multiline = {true}
                                     numberOfLines = {4}
@@ -149,11 +189,11 @@ class DayOfWeek extends Component {
                             <View style={styles.buttons}>
                                 <TouchableOpacity
                                     onPress={this.toggleModal}>
-                                    <Text style={styles.button}>Cancel</Text>
+                                    <Text style={styles.button}>{strings('week_screen.cancel2')}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={this.toggleModalCreate}>
-                                    <Text style={styles.button}>Create Task</Text>
+                                    <Text style={styles.button}>{strings('week_screen.create_task')}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -172,6 +212,9 @@ const styles = StyleSheet.create({
         marginTop: 8,
         marginHorizontal: 8,
     },
+    backgroundNowCol: {
+        backgroundColor: '#b0c4de',
+    },
     dayText: {
         fontFamily: 'OpenSans-SemiBold',
         fontSize: 18
@@ -189,12 +232,20 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 6,
         borderBottomLeftRadius: 6,
         justifyContent: 'center',
+    },
+    backgroundCol: {
         backgroundColor: 'powderblue'
     },
     progressCol: {
         flex: 3,
         justifyContent: 'center',
         backgroundColor: 'skyblue'
+    },
+    progressColBackground: {
+        backgroundColor: 'skyblue'
+    },
+    progressNowColBackground: {
+        backgroundColor: '#b0c4de',
     },
     progressText: {
         textAlign: 'center',
@@ -207,9 +258,14 @@ const styles = StyleSheet.create({
     addCol: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: 'steelblue',
         borderTopRightRadius: 6,
         alignItems: 'center',
+    },
+    addNowColBackground: {
+        backgroundColor: '#b0c4de',
+    },
+    addColBackground: {
+        backgroundColor: 'steelblue',
     },
     modalWrap: {
         overflow: 'visible'

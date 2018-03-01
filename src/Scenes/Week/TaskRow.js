@@ -10,8 +10,10 @@ import {
     TouchableOpacity,
     CheckBox,
     Modal,
-    TextInput
+    TextInput,
+    Image
 } from 'react-native';
+import {strings} from '../../locales/i18n';
 
 import {
     colors as colorConst,
@@ -34,25 +36,25 @@ class TaskRow extends Component {
         this.setState({modalVisible: !this.state.modalVisible})
     }
 
-    toggleModalEdit = () => {console.log(this.props.task)
+    toggleModalEdit = () => {
         this.setState({modalVisible: !this.state.modalVisible})
         this.props.editTask(
             this.props.date,
             this.props.task.id,
             this.state.title,
             this.state.description,
-            !this.state.checked
+            this.state.checked
         );
     }
 
     render() {
         if(this.state.isModalOpen) {
             Alert.alert(
-                `Do you want to delete a task:\n${this.props.task.title}?`,
+                `${strings('week_screen.do_you_want_to_delete_task')}: ${this.props.task.title}?`,
                 null,
                 [
-                    {text: 'CANCEL', onPress: () => this.setState({isModalOpen: false})},
-                    {text: 'DELETE', onPress: () => {
+                    {text: strings('week_screen.cancel'), onPress: () => this.setState({isModalOpen: false})},
+                    {text: strings('week_screen.delete'), onPress: () => {
                     this.setState({isModalOpen: false}), this.props.deleteTask(
                         this.props.date,
                         this.props.task.id,
@@ -83,15 +85,23 @@ class TaskRow extends Component {
                 </View>
                 <View style={styles.buttonsCol}>
                     <TouchableOpacity
-                        style={{backgroundColor: 'gray',height:40,width:40}}
+                        style={{height:30,width:30}}
                         onPress={() => this.toggleModal()}
+                    >
+                    <Image
+                        style={{width: 30, height: 30}}
+                        source={require('./img/edit.png')}
                     />
+                    </TouchableOpacity>
                     <TouchableOpacity
-                        style={{backgroundColor: 'green',height:40,width:40}}
+                        style={{height:30,width:30}}
                         onPress={() => this.setState({isModalOpen: !this.state.isModalOpen})}
+                    >
+                    <Image
+                        style={{width: 30, height: 30}}
+                        source={require('./img/remove.png')}
                     />
-                        
-                    <TouchableOpacity/>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.modalWrap}>
@@ -101,12 +111,12 @@ class TaskRow extends Component {
                         onRequestClose={() => {}}
                         visible={this.state.modalVisible}>
                         <View style={styles.modal}>
-                            <Text style={styles.headerModalText}>Edit your task</Text>
+                            <Text style={styles.headerModalText}>{strings('week_screen.edit_your_task')}</Text>
                             <ScrollView style={styles.modalBody} keyboardShouldPersistTaps="handled">
                                 <TextInput 
                                     name="title"
                                     style={{height: 40}}
-                                    placeholder="Title"
+                                    placeholder={strings('week_screen.title')}
                                     placeholderTextColor='#C7C7CD'
                                     onChangeText={(title) => this.setState({title})}
                                     returnKeyType={"next"}
@@ -119,7 +129,7 @@ class TaskRow extends Component {
                                 <TextInput 
                                     name="description"
                                     style={{height: 150}}
-                                    placeholder="Description"
+                                    placeholder={strings('week_screen.description')}
                                     ref="descriptionRef"
                                     multiline = {true}
                                     value={this.state.description}
@@ -131,11 +141,11 @@ class TaskRow extends Component {
                             <View style={styles.buttons}>
                                 <TouchableOpacity
                                     onPress={this.toggleModal}>
-                                    <Text style={styles.button}>Cancel</Text>
+                                    <Text style={styles.button}>{strings('week_screen.cancel')}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={this.toggleModalEdit}>
-                                    <Text style={styles.button}>Save</Text>
+                                    <Text style={styles.button}>{strings('week_screen.save')}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -151,7 +161,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        backgroundColor: 'red'
+        alignItems: 'center',
+        backgroundColor: '#FFB291',
+        paddingVertical: 3
     },
     textCol: {
         justifyContent: 'center',
@@ -161,7 +173,8 @@ const styles = StyleSheet.create({
     buttonsCol: {
         flex: 2,
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
+        paddingRight: 3
     },
     modalWrap: {
         overflow: 'visible'
@@ -201,7 +214,7 @@ const styles = StyleSheet.create({
         fontFamily: 'OpenSans-SemiBold',
         fontSize: 18,
         marginLeft: 25,
-        marginRight: 25
+        marginRight: 25,
     },
 
 });
