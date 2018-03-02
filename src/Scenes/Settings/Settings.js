@@ -13,6 +13,7 @@ import {
     AsyncStorage,
     Picker,
     Switch,
+    Linking
 } from 'react-native';
 import {Actions, ActionConst} from 'react-native-router-flux';
 import _ from 'lodash';
@@ -40,7 +41,7 @@ class Settings extends Component {
     }
     
     openLink = () => {
-        Linking.openURL('https://play.google.com/store/apps')
+        Linking.openURL('https://play.google.com/store/apps/details?id=com.mytodolist')
             .catch(err => console.error('An error occurred', err));
     }
 

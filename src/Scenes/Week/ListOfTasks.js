@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 import moment from 'moment';
+import {strings} from '../../locales/i18n';
 
 import {
     colors as colorConst,
@@ -76,7 +77,7 @@ class ListOfTasks extends Component {
                             editTask={this.props.editTask}
                     />)
                     :
-                    <Text style={styles.noTaskText}>No tasks yet</Text>
+                    <Text style={styles.noTaskText}>{strings('week_screen.no_tasks_yet')}</Text>
                 }
             </View>
         );
